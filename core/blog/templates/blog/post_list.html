@@ -22,7 +22,9 @@
             <p>
                 {{ post.content }}
             </p>
-            {{ post.published_date }} - {{ post.author }}
+            {{ post.published_date }} -
+            {{ post.author.first_name }} {{ post.author.last_name }} -
+            {{ post.author }}
             <br>
 
         </div>
