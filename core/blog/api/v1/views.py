@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404, get_list_or_404
 
+from rest_framework.views import APIView
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
@@ -9,6 +10,8 @@ from blog.models import Post
 from .serializers import PostSerializer
 
 
+# Post List View in Function Based View.
+"""
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticatedOrReadOnly])
 def post_list_view(request):
@@ -17,6 +20,37 @@ def post_list_view(request):
         serializer = PostSerializer(posts, many=True)
         return Response(serializer.data)
     elif request.method == 'POST':
+        serializer = PostSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+"""
+
+
+class PostListView(APIView):
+    """
+    getting a list of post and creating new posts.
+    """
+
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    serializer_class = PostSerializer
+
+    def get(self, request):
+        """
+        retrieving a list of posts.
+        :param request:
+        :return:
+        """
+        posts = get_list_or_404(Post)
+        serializer = PostSerializer(posts, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        """
+        creating a post with provided data.
+        :param request:
+        :return:
+        """
         serializer = PostSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
