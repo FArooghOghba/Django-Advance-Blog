@@ -1,7 +1,6 @@
 from django.shortcuts import get_object_or_404, get_list_or_404
 
-from rest_framework.views import APIView
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.generics import ListCreateAPIView
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.status import HTTP_204_NO_CONTENT
@@ -10,37 +9,17 @@ from blog.models import Post
 from .serializers import PostSerializer
 
 
-class PostListView(APIView):
+class PostListView(ListCreateAPIView):
     """
     getting a list of post and creating new posts.
     """
 
     permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = PostSerializer
-
-    def get(self, request):
-        """
-        retrieving a list of posts.
-        :param request:
-        :return:
-        """
-        posts = get_list_or_404(Post)
-        serializer = self.serializer_class(posts, many=True)
-        return Response(serializer.data)
-
-    def post(self, request):
-        """
-        creating a post with provided data.
-        :param request:
-        :return:
-        """
-        serializer = self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
+    queryset = Post.objects.all()
 
 
-class PostDetailView(APIView):
+class PostDetailView(ListCreateAPIView):
     """
     getting detail of a post, edit and delete the post.
     """
@@ -86,8 +65,45 @@ class PostDetailView(APIView):
         return Response({'detail': 'item removed successfully.'}, status=HTTP_204_NO_CONTENT)
 
 
+# Post List View in Class Based View with APIView.
+
+'''
+from rest_framework.views import APIView
+
+class PostListView(APIView):
+    """
+    getting a list of post and creating new posts.
+    """
+
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    serializer_class = PostSerializer
+
+    def get(self, request):
+        """
+        retrieving a list of posts.
+        :param request:
+        :return:
+        """
+        posts = get_list_or_404(Post)
+        serializer = self.serializer_class(posts, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        """
+        creating a post with provided data.
+        :param request:
+        :return:
+        """
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+'''
+
 # Post List View in Function Based View.
 """
+from rest_framework.decorators import api_view, permission_classes
+
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticatedOrReadOnly])
 def post_list_view(request):
@@ -105,6 +121,8 @@ def post_list_view(request):
 
 # Post Detail View in Function Based View.
 """
+from rest_framework.decorators import api_view, permission_classes
+
 @api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes([IsAuthenticatedOrReadOnly])
 def post_detail_view(request, post_id):
