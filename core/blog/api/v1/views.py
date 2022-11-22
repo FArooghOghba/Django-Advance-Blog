@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404, get_list_or_404
 
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.viewsets import ViewSet, ModelViewSet
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.status import HTTP_204_NO_CONTENT
@@ -9,7 +9,52 @@ from blog.models import Post
 from .serializers import PostSerializer
 
 
-class PostListView(ListCreateAPIView):
+class PostViewSet(ModelViewSet):
+    serializer_class = PostSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    queryset = Post.objects.all()
+
+
+# Post List & Retrieve View with ViewSet.
+
+'''
+class PostViewSet(ViewSet):
+    """
+    A simple ViewSet for listing or retrieving posts.
+    """
+
+    serializer_class = PostSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    queryset = Post.objects.all()
+
+    def list(self, request):
+        serializer = self.serializer_class(self.queryset, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+        post_object = get_object_or_404(Post, pk=pk)
+        serializer = self.serializer_class(post_object)
+        return Response(serializer.data)
+
+    def create(self, request):
+        pass
+
+    def update(self, request, pk=None):
+        pass
+
+    def partial_update(self, request, pk=None):
+        pass
+
+    def destroy(self, request, pk=None):
+        pass
+'''
+
+# Post List View in Class Based View with GenericAPIView.
+
+'''
+from rest_framework.generics import ListCreateAPIView
+
+class PostListCreateAPIView(ListCreateAPIView):
     """
     getting a list of post and creating new posts.
     """
@@ -17,17 +62,7 @@ class PostListView(ListCreateAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = PostSerializer
     queryset = Post.objects.all()
-
-
-class PostDetailView(RetrieveUpdateDestroyAPIView):
-    """
-    getting detail of a post, edit and delete the post.
-    """
-
-    permission_classes = [IsAuthenticatedOrReadOnly]
-    serializer_class = PostSerializer
-    queryset = Post.objects.all()
-    lookup_url_kwarg = 'post_id'
+'''
 
 
 # Post List View in Class Based View with APIView.
@@ -35,7 +70,7 @@ class PostDetailView(RetrieveUpdateDestroyAPIView):
 '''
 from rest_framework.views import APIView
 
-class PostListView(APIView):
+class PostListAPIView(APIView):
     """
     getting a list of post and creating new posts.
     """
@@ -65,7 +100,9 @@ class PostListView(APIView):
         return Response(serializer.data)
 '''
 
+
 # Post List View in Function Based View.
+
 """
 from rest_framework.decorators import api_view, permission_classes
 
@@ -84,7 +121,25 @@ def post_list_view(request):
 """
 
 
+# Post Detail View in Class Based View with GenericAPIView.
+
+'''
+from rest_framework.generics import RetrieveUpdateDestroyAPIView
+
+class PostDetailRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
+    """
+    getting detail of a post, edit and delete the post.
+    """
+
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    serializer_class = PostSerializer
+    queryset = Post.objects.all()
+    lookup_url_kwarg = 'post_id'
+'''
+
+
 # Post Detail View in Function Based View.
+
 """
 from rest_framework.decorators import api_view, permission_classes
 
@@ -112,7 +167,7 @@ def post_detail_view(request, post_id):
 '''
 from rest_framework.views import APIView
 
-class PostDetailView(ListCreateAPIView):
+class PostDetailCreateAPIView(ListCreateAPIView):
     """
     getting detail of a post, edit and delete the post.
     """
