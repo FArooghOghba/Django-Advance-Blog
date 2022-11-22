@@ -5,14 +5,20 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.status import HTTP_204_NO_CONTENT
 
-from blog.models import Post
-from .serializers import PostSerializer
+from blog.models import Post, Category
+from .serializers import PostSerializer, CategorySerializer
 
 
-class PostViewSet(ModelViewSet):
+class PostModelViewSet(ModelViewSet):
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
     queryset = Post.objects.all()
+
+
+class CategoryModelViewSet(ModelViewSet):
+    serializer_class = CategorySerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    queryset = Category.objects.all()
 
 
 # Post List & Retrieve View with ViewSet.
