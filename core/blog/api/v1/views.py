@@ -7,11 +7,12 @@ from rest_framework.status import HTTP_204_NO_CONTENT
 
 from blog.models import Post, Category
 from .serializers import PostSerializer, CategorySerializer
+from .permissions import IsAuthorOrReadOnly
 
 
 class PostModelViewSet(ModelViewSet):
     serializer_class = PostSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
     queryset = Post.objects.all()
 
 
