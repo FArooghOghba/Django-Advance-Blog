@@ -5,6 +5,7 @@ from rest_framework.viewsets import ViewSet, ModelViewSet
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.status import HTTP_204_NO_CONTENT
+from rest_framework.filters import SearchFilter
 
 from blog.models import Post, Category
 from .serializers import PostSerializer, CategorySerializer
@@ -14,8 +15,9 @@ from .permissions import IsAuthorOrReadOnly
 class PostModelViewSet(ModelViewSet):
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_fields = ['category', 'author', 'status']
+    search_fields = ['title', 'content', 'category__name']
     queryset = Post.objects.all()
 
 
