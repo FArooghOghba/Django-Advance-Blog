@@ -10,6 +10,7 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from blog.models import Post, Category
 from .serializers import PostSerializer, CategorySerializer
 from .permissions import IsAuthorOrReadOnly
+from .paginations import DefaultPagination
 
 
 class PostModelViewSet(ModelViewSet):
@@ -19,6 +20,7 @@ class PostModelViewSet(ModelViewSet):
     filterset_fields = ['category', 'author', 'status']
     search_fields = ['title', 'content', 'category__name']
     ordering_fields = ['published_date']
+    pagination_class = DefaultPagination
     queryset = Post.objects.all()
 
 
