@@ -1,10 +1,16 @@
-asgiref==3.5.2
+# General Modules
 Django==3.2.16
-python-decouple==3.6
-pytz==2022.6
-sqlparse==0.4.3
 pillow
 djangorestframework
+
+# Third Party Modules
+asgiref==3.5.2
+pytz==2022.6
+sqlparse==0.4.3
+python-decouple==3.6
 markdown
 django-filter
+drf-yasg[validation]
+
+# Development Modules
 django-debug-toolbar
