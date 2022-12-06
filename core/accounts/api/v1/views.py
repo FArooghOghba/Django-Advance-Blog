@@ -5,7 +5,9 @@ from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_204_NO_CONTENT
 
-from .serializers import RegistrationModelSerializer, CustomAuthTokenSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
+
+from .serializers import RegistrationModelSerializer, CustomAuthTokenSerializer, CustomTokenObtainSerializer
 
 
 class RegistrationGenericAPIView(GenericAPIView):
@@ -43,3 +45,7 @@ class DiscardAuthToken(APIView):
     def post(self, request):
         request.user.auth_token.delete()
         return Response(status=HTTP_204_NO_CONTENT)
+
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainSerializer
