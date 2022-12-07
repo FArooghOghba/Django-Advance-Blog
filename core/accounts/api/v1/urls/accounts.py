@@ -4,13 +4,11 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView, TokenRefreshView, TokenVerifyView
 )
 
-from .views import (
+from ..views import (
     RegistrationGenericAPIView, ObtainAuthToken, DiscardAuthToken,
-    CustomTokenObtainPairView, ChangePasswordUpdateAPIView, ProfileRetrieveUpdateAPIView
+    CustomTokenObtainPairView, ChangePasswordUpdateAPIView
 )
 
-
-app_name = 'api-v1'
 
 
 urlpatterns = [
@@ -28,6 +26,4 @@ urlpatterns = [
     path('jwt/create/', CustomTokenObtainPairView.as_view(), name='jwt-create'),
     path('jwt/refresh/', TokenRefreshView.as_view(), name='jwt-refresh'),
     path('jwt/verify/', TokenVerifyView.as_view(), name='jwt_verify'),
-
-    path('profile/', ProfileRetrieveUpdateAPIView.as_view(), name='profile')
 ]
