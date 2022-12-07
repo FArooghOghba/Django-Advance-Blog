@@ -5,7 +5,8 @@ from rest_framework_simplejwt.views import (
 )
 
 from .views import (
-    RegistrationGenericAPIView, ObtainAuthToken, DiscardAuthToken, CustomTokenObtainPairView
+    RegistrationGenericAPIView, ObtainAuthToken, DiscardAuthToken,
+    CustomTokenObtainPairView, ChangePasswordUpdateAPIView, ProfileRetrieveUpdateAPIView
 )
 
 
@@ -16,6 +17,9 @@ urlpatterns = [
     # registration
     path('registration/', RegistrationGenericAPIView.as_view(), name='register'),
 
+    # change password
+    path('change-password/', ChangePasswordUpdateAPIView.as_view(), name='change-password'),
+
     # login token
     path('token/login/', ObtainAuthToken.as_view(), name='token-login'),
     path('token/logout/', DiscardAuthToken.as_view(), name='token-logout'),
@@ -24,4 +28,6 @@ urlpatterns = [
     path('jwt/create/', CustomTokenObtainPairView.as_view(), name='jwt-create'),
     path('jwt/refresh/', TokenRefreshView.as_view(), name='jwt-refresh'),
     path('jwt/verify/', TokenVerifyView.as_view(), name='jwt_verify'),
+
+    path('profile/', ProfileRetrieveUpdateAPIView.as_view(), name='profile')
 ]
