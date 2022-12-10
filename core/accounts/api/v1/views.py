@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
+from django.core.mail import send_mail
 
 from rest_framework.generics import GenericAPIView, RetrieveUpdateAPIView
 from rest_framework.views import APIView
@@ -107,3 +108,15 @@ class ProfileRetrieveUpdateAPIView(RetrieveUpdateAPIView):
         user = self.request.user
         profile = get_object_or_404(queryset, user=user)
         return profile
+
+
+class ActivationConfirmGenericAPIView(GenericAPIView):
+    def get(self, request, *args, **kwargs):
+        send_mail(
+            'Subject here',
+            'Here is the test message number 4.',
+            'from@example.com',
+            ['to@example.com'],
+            fail_silently=False,
+        )
+        return Response('Emil Sent.')

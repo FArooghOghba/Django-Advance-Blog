@@ -6,7 +6,8 @@ from rest_framework_simplejwt.views import (
 
 from ..views import (
     RegistrationGenericAPIView, ObtainAuthToken, DiscardAuthToken,
-    CustomTokenObtainPairView, ChangePasswordUpdateAPIView
+    CustomTokenObtainPairView, ChangePasswordUpdateAPIView,
+    ActivationConfirmGenericAPIView
 )
 
 
@@ -14,6 +15,8 @@ from ..views import (
 urlpatterns = [
     # registration
     path('registration/', RegistrationGenericAPIView.as_view(), name='register'),
+
+    path('activation/confirm/', ActivationConfirmGenericAPIView.as_view(), name='activation-confirm'),
 
     # change password
     path('change-password/', ChangePasswordUpdateAPIView.as_view(), name='change-password'),
