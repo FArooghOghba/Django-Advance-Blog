@@ -1,6 +1,5 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
-from django.core.mail import send_mail
 
 from rest_framework.generics import GenericAPIView, RetrieveUpdateAPIView
 from rest_framework.views import APIView
@@ -11,6 +10,7 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_204_NO_CONTENT, HTTP_200_OK
 
 from rest_framework_simplejwt.views import TokenObtainPairView
+from mail_templated import send_mail
 
 from .serializers import (
     RegistrationModelSerializer, CustomAuthTokenSerializer,
@@ -113,10 +113,29 @@ class ProfileRetrieveUpdateAPIView(RetrieveUpdateAPIView):
 class ActivationConfirmGenericAPIView(GenericAPIView):
     def get(self, request, *args, **kwargs):
         send_mail(
-            'Subject here',
-            'Here is the test message number 4.',
-            'from@example.com',
-            ['to@example.com'],
-            fail_silently=False,
+            'email/email.tpl',
+            {'username': 'user_name'},
+            'from_email@example.com',
+            ['user.email@example.com']
         )
         return Response('Emil Sent.')
+
+"""
+from django.core.mail import send_mail, EmailMessage
+from django.template.loader import get_template
+
+data = {
+            "fname": 'username',
+            "date": 'date',
+        }
+
+        message = get_template('email.html').render(data)
+        email = EmailMessage(
+            "About your appointment",
+            message,
+            'from@example.com',
+            ['to@example.com'],
+        )
+        email.content_subtype = "html"
+        email.send()
+"""

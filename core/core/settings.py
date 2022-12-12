@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'rest_framework_simplejwt',
     'django_filters',
+    'mail_templated',
     'drf_yasg',
     'debug_toolbar',
 
