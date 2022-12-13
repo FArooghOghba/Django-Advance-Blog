@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_204_NO_CONTENT, HTTP_200_OK
 
 from rest_framework_simplejwt.views import TokenObtainPairView
-from mail_templated import send_mail
+from mail_templated import EmailMessage
 
 from .serializers import (
     RegistrationModelSerializer, CustomAuthTokenSerializer,
@@ -19,6 +19,7 @@ from .serializers import (
 )
 
 from ...models import Profile
+from ..utils import EmailThread
 
 
 User = get_user_model()
@@ -112,12 +113,14 @@ class ProfileRetrieveUpdateAPIView(RetrieveUpdateAPIView):
 
 class ActivationConfirmGenericAPIView(GenericAPIView):
     def get(self, request, *args, **kwargs):
-        send_mail(
+        activation_email = EmailMessage(
             'email/email.tpl',
             {'username': 'user_name'},
             'from_email@example.com',
             ['user.email@example.com']
         )
+        EmailThread(activation_email).start()
+
         return Response('Emil Sent.')
 
 """
@@ -138,4 +141,15 @@ data = {
         )
         email.content_subtype = "html"
         email.send()
+"""
+
+"""
+from mail_templated import send_mail
+
+send_mail(
+    'email/email.tpl',
+    {'username': 'user_name'},
+    'from_email@example.com',
+    ['user.email@example.com']
+)
 """
