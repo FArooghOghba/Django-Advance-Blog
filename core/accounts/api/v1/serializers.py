@@ -152,6 +152,29 @@ class ProfileModelSerializer(serializers.ModelSerializer):
         )
 
 
+class ActivationResendSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
+
+    def validate(self, attrs):
+        email = attrs.get('email')
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            raise serializers.ValidationError(
+                {'detail': 'user does not exist.'}
+            )
+
+        if user.is_verified:
+            raise serializers.ValidationError(
+                {'detail': 'Your account has already verified.'},
+                code=HTTP_400_BAD_REQUEST
+            )
+
+        attrs['user'] = user
+        return super().validate(attrs)
+
+
 """
 class ChangePasswordModelSerializer(serializers.ModelSerializer):
     old_password = serializers.CharField(

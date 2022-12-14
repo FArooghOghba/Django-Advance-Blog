@@ -21,7 +21,7 @@ from decouple import config
 from .serializers import (
     RegistrationModelSerializer, CustomAuthTokenSerializer,
     CustomTokenObtainSerializer, ChangePasswordModelSerializer,
-    ProfileModelSerializer
+    ProfileModelSerializer, ActivationResendSerializer
 )
 
 from ...models import Profile
@@ -166,6 +166,37 @@ class ActivationConfirmGenericAPIView(GenericAPIView):
             {'detail': 'Your account have been verified successfully.'},
             status=HTTP_200_OK
         )
+
+
+class ActivationResendGenericAPIView(GenericAPIView):
+    serializer_class = ActivationResendSerializer
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        email = user.email
+        token = self.get_token_for_user(user)
+
+        activation_email = EmailMessage(
+            'email/activation_email.tpl',
+            {
+                'token': f'http://127.0.0.1:8000/accounts/api/v1/activation/confirm/{token}/',
+                'email': email
+            },
+            'from_email@example.com',
+            [email]
+        )
+        EmailThread(activation_email).start()
+        return Response(
+            {'detail': 'Your activation resend successfully.'},
+            status=HTTP_200_OK
+        )
+
+
+    def get_token_for_user(self, user):
+        refresh = RefreshToken.for_user(user)
+        return str(refresh.access_token)
+
 
 """
 from django.core.mail import send_mail, EmailMessage
