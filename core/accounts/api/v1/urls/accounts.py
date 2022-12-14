@@ -16,7 +16,7 @@ urlpatterns = [
     # registration
     path('registration/', RegistrationGenericAPIView.as_view(), name='register'),
 
-    path('activation/confirm/', ActivationConfirmGenericAPIView.as_view(), name='activation-confirm'),
+    path('activation/confirm/<str:token>/', ActivationConfirmGenericAPIView.as_view(), name='activation-confirm'),
 
     # change password
     path('change-password/', ChangePasswordUpdateAPIView.as_view(), name='change-password'),

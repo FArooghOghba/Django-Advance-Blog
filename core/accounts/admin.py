@@ -18,7 +18,7 @@ class UserAdmin(BaseUserAdmin):
             'fields': ('email', 'password')
         }),
         ('Permissions', {
-            'fields': ('is_staff', 'is_active', 'is_superuser')
+            'fields': ('is_staff', 'is_active', 'is_superuser', 'is_verified')
         }),
         ('Group Permissions', {
             'fields': ('groups', 'user_permissions')

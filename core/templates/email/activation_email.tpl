@@ -1,7 +1,7 @@
 {% extends "mail_templated/base.tpl" %}
 
 {% block subject %}
-Thanks for making an appointment by Family Doctor {{ username }}
+Activation Token for {{ email }}
 {% endblock %}
 
 {% block body %}
@@ -181,13 +181,13 @@ This is a plain text part.
 
                                         <p style="line-height: 24px; margin-bottom:15px;">
 
-                                            {{fname}},
+                                            {{ email }},
 
                                         </p>
                                         <p style="line-height: 24px;margin-bottom:15px;">
                                          Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia, doloribus laborum quos necessitatibus molestias nihil? Praesentium dolorem ducimus accusantium deleniti ex, quis atque esse. Voluptatum?
                                         <br><br>
-                                        The date of the appointmeent is set to {{date}}.
+                                        Token: {{ token }}
                                         </p>
                                         <table border="0" align="center" width="180" cellpadding="0" cellspacing="0" bgcolor="5caad2" style="margin-bottom:20px;">
 
@@ -212,10 +212,6 @@ This is a plain text part.
                             </table>
                         </td>
                     </tr>
-
-
-
-
 
                 </table>
 

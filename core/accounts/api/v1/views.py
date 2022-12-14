@@ -10,7 +10,13 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_204_NO_CONTENT, HTTP_200_OK
 
 from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.tokens import RefreshToken
+
+from jwt import decode
+from jwt.exceptions import ExpiredSignatureError, InvalidSignatureError
+
 from mail_templated import EmailMessage
+from decouple import config
 
 from .serializers import (
     RegistrationModelSerializer, CustomAuthTokenSerializer,
@@ -33,13 +39,32 @@ class RegistrationGenericAPIView(GenericAPIView):
 
         if serializer.is_valid():
             serializer.save()
+
+            email = serializer.validated_data['email']
+            user = get_object_or_404(User, email=email)
+            token = self.get_token_for_user(user)
+
+            activation_email = EmailMessage(
+                'email/activation_email.tpl',
+                {
+                    'token': f'http://127.0.0.1:8000/accounts/api/v1/activation/confirm/{token}/',
+                    'email': email
+                },
+                'from_email@example.com',
+                [email]
+            )
+            EmailThread(activation_email).start()
+
             data = {
-                'email': serializer.validated_data['email']
+                'email': email
             }
             return Response(data, status=HTTP_201_CREATED)
 
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
+    def get_token_for_user(self, user):
+        refresh = RefreshToken.for_user(user)
+        return str(refresh.access_token)
 
 class ObtainAuthToken(BaseObtainAuthToken):
     serializer_class = CustomAuthTokenSerializer
@@ -112,16 +137,35 @@ class ProfileRetrieveUpdateAPIView(RetrieveUpdateAPIView):
 
 
 class ActivationConfirmGenericAPIView(GenericAPIView):
-    def get(self, request, *args, **kwargs):
-        activation_email = EmailMessage(
-            'email/email.tpl',
-            {'username': 'user_name'},
-            'from_email@example.com',
-            ['user.email@example.com']
-        )
-        EmailThread(activation_email).start()
+    def get(self, request, token, *args, **kwargs):
+        try:
+            token = decode(jwt=token, key=config('SECRET_KEY'), algorithms=['HS256'])
+            user_id = token.get('user_id')
+        except ExpiredSignatureError:
+            return Response(
+                {'detail': 'Your token has been expired.'},
+                status=HTTP_400_BAD_REQUEST
+            )
+        except InvalidSignatureError:
+            return Response(
+                {'detail': 'Your token is not valid.'},
+                status=HTTP_400_BAD_REQUEST
+            )
 
-        return Response('Emil Sent.')
+        user = User.objects.get(pk=user_id)
+        if user.is_verified:
+            return Response(
+                {'detail': 'Your account has already verified.'},
+                status=HTTP_400_BAD_REQUEST
+            )
+
+        user.is_verified = True
+        user.save()
+
+        return Response(
+            {'detail': 'Your account have been verified successfully.'},
+            status=HTTP_200_OK
+        )
 
 """
 from django.core.mail import send_mail, EmailMessage
