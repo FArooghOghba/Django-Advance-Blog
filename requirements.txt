@@ -4,6 +4,7 @@ pillow
 djangorestframework
 
 # Third Party Modules
+djoser
 djangorestframework-simplejwt
 drf-yasg[validation]
 django-filter
