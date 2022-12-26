@@ -23,6 +23,7 @@ class RegistrationModelSerializer(serializers.ModelSerializer):
         max_length=255, write_only=True,
         style={'input_type': 'password'}
     )
+
     class Meta:
         model = User
         fields = ('email', 'password', 'confirm_password')
@@ -40,7 +41,9 @@ class RegistrationModelSerializer(serializers.ModelSerializer):
         try:
             validate_password(password)
         except ValidationError as error:
-            raise serializers.ValidationError({'password': list(error.messages)})
+            raise serializers.ValidationError(
+                {'password': list(error.messages)}
+            )
 
         return super().validate(attrs)
 
@@ -115,8 +118,8 @@ class ChangePasswordModelSerializer(serializers.Serializer):
         style={'input_type': 'password'}
     )
     new_password = serializers.CharField(
-        max_length=255, write_only=True, required=True, validators=[validate_password],
-        style={'input_type': 'password'}
+        max_length=255, write_only=True, required=True,
+        validators=[validate_password], style={'input_type': 'password'}
     )
     confirm_new_password = serializers.CharField(
         max_length=255, write_only=True, required=True,
@@ -145,6 +148,7 @@ class ChangePasswordModelSerializer(serializers.Serializer):
 
 class ProfileModelSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(source='user.email', read_only=True)
+
     class Meta:
         model = Profile
         fields = (
@@ -182,8 +186,8 @@ class ChangePasswordModelSerializer(serializers.ModelSerializer):
         style={'input_type': 'password'}
     )
     new_password = serializers.CharField(
-        max_length=255, write_only=True, required=True, validators=[validate_password],
-        style={'input_type': 'password'}
+        max_length=255, write_only=True, required=True,
+        validators=[validate_password], style={'input_type': 'password'}
     )
     confirm_new_password = serializers.CharField(
         max_length=255, write_only=True, required=True,

@@ -3,11 +3,14 @@ from django.shortcuts import get_object_or_404
 
 from rest_framework.generics import GenericAPIView, RetrieveUpdateAPIView
 from rest_framework.views import APIView
-from rest_framework.authtoken.views import ObtainAuthToken as BaseObtainAuthToken
+from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_204_NO_CONTENT, HTTP_200_OK
+from rest_framework.status import (
+    HTTP_201_CREATED, HTTP_400_BAD_REQUEST,
+    HTTP_204_NO_CONTENT, HTTP_200_OK
+)
 
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -44,10 +47,13 @@ class RegistrationGenericAPIView(GenericAPIView):
             user = get_object_or_404(User, email=email)
             token = self.get_token_for_user(user)
 
+            domain = 'http://127.0.0.1:8000/'
+            url = 'accounts/api/v1/activation/confirm/'
+
             activation_email = EmailMessage(
                 'email/activation_email.tpl',
                 {
-                    'token': f'http://127.0.0.1:8000/accounts/api/v1/activation/confirm/{token}/',
+                    'token': f'{domain}{url}{token}/',
                     'email': email
                 },
                 'from_email@example.com',
@@ -66,11 +72,15 @@ class RegistrationGenericAPIView(GenericAPIView):
         refresh = RefreshToken.for_user(user)
         return str(refresh.access_token)
 
-class ObtainAuthToken(BaseObtainAuthToken):
+
+class CustomObtainAuthToken(ObtainAuthToken):
     serializer_class = CustomAuthTokenSerializer
+
     def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data,
-                                           context={'request': request})
+        serializer = self.serializer_class(
+            data=request.data,
+            context={'request': request}
+        )
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
         token, created = Token.objects.get_or_create(user=user)
@@ -139,7 +149,9 @@ class ProfileRetrieveUpdateAPIView(RetrieveUpdateAPIView):
 class ActivationConfirmGenericAPIView(GenericAPIView):
     def get(self, request, token, *args, **kwargs):
         try:
-            token = decode(jwt=token, key=config('SECRET_KEY'), algorithms=['HS256'])
+            token = decode(
+                jwt=token, key=config('SECRET_KEY'), algorithms=['HS256']
+            )
             user_id = token.get('user_id')
         except ExpiredSignatureError:
             return Response(
@@ -170,6 +182,7 @@ class ActivationConfirmGenericAPIView(GenericAPIView):
 
 class ActivationResendGenericAPIView(GenericAPIView):
     serializer_class = ActivationResendSerializer
+
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -177,10 +190,13 @@ class ActivationResendGenericAPIView(GenericAPIView):
         email = user.email
         token = self.get_token_for_user(user)
 
+        domain = 'http://127.0.0.1:8000/'
+        url = 'accounts/api/v1/activation/confirm/'
+
         activation_email = EmailMessage(
             'email/activation_email.tpl',
             {
-                'token': f'http://127.0.0.1:8000/accounts/api/v1/activation/confirm/{token}/',
+                'token': f'{domain}{url}{token}/',
                 'email': email
             },
             'from_email@example.com',
@@ -191,7 +207,6 @@ class ActivationResendGenericAPIView(GenericAPIView):
             {'detail': 'Your activation resend successfully.'},
             status=HTTP_200_OK
         )
-
 
     def get_token_for_user(self, user):
         refresh = RefreshToken.for_user(user)

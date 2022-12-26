@@ -1,10 +1,7 @@
-from django.shortcuts import get_object_or_404, get_list_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 
-from rest_framework.viewsets import ViewSet, ModelViewSet
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from rest_framework.response import Response
-from rest_framework.status import HTTP_204_NO_CONTENT
 from rest_framework.filters import SearchFilter, OrderingFilter
 
 from blog.models import Post, Category
@@ -173,7 +170,10 @@ def post_detail_view(request, post_id):
         return Response(serializer.data)
     elif request.method == 'DELETE':
         post.delete()
-        return Response({'detail': 'item removed successfully.'}, status=HTTP_204_NO_CONTENT)
+        return Response(
+            {'detail': 'item removed successfully.'},
+            status=HTTP_204_NO_CONTENT
+        )
 """
 
 
@@ -225,6 +225,9 @@ class PostDetailCreateAPIView(ListCreateAPIView):
 
         post = get_object_or_404(Post, pk=post_id)
         post.delete()
-        return Response({'detail': 'item removed successfully.'}, status=HTTP_204_NO_CONTENT)
+        return Response(
+            {'detail': 'item removed successfully.'},
+            status=HTTP_204_NO_CONTENT
+        )
 
 '''

@@ -65,7 +65,8 @@ class PostDetailView(LoginRequiredMixin, DetailView):
 
 class PostCreateView(CreateView):
     """
-    View for creating a new Post object, with a response rendered by a template.
+    View for creating a new Post object, with a
+    response rendered by a template.
     """
 
     model = Post

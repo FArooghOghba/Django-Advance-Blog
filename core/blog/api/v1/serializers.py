@@ -11,7 +11,9 @@ from accounts.models import Profile
 
 class PostSerializer(serializers.ModelSerializer):
     snippet = serializers.ReadOnlyField(source='get_snippet')
-    absolute_url = serializers.SerializerMethodField(method_name='get_absolute_url')
+    absolute_url = serializers.SerializerMethodField(
+        method_name='get_absolute_url'
+    )
     # category = serializers.SlugRelatedField(
     #     many=False,
     #     slug_field='name',
@@ -21,12 +23,14 @@ class PostSerializer(serializers.ModelSerializer):
     def get_absolute_url(self, post_obj):
         request = self.context.get('request')
         return request.build_absolute_uri(post_obj.pk)
-    
+
     def to_representation(self, instance):
         request = self.context.get('request')
 
         rep = super(PostSerializer, self).to_representation(instance)
-        rep['category'] = CategorySerializer(instance.category, context={'request': request}).data
+        rep['category'] = CategorySerializer(
+            instance.category, context={'request': request}
+        ).data
 
         is_retrieve = request.parser_context.get('kwargs').get('pk')
         if is_retrieve is not None:
