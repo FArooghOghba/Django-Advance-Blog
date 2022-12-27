@@ -1,13 +1,13 @@
 from django.test import TestCase
 from django.urls import reverse, resolve
 
-from .views import (
+from ..views import (
     IndexTemplateView, PostListView, PostDetailView
 )
 
 # Create your tests here.
 
-class TestUrl(TestCase):
+class TestBlogUrls(TestCase):
 
     def test_blog_index_url_resolver(self):
         url = reverse('blog:index')
