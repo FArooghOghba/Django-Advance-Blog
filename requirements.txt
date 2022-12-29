@@ -18,3 +18,5 @@ django-mail-templated
 # Development Modules
 django-debug-toolbar
 flake8
+pytest
+pytest-django
