@@ -1,7 +1,6 @@
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth import authenticate
 from django.core.exceptions import ValidationError
-from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth import get_user_model
 
 from rest_framework import serializers
@@ -34,7 +33,7 @@ class RegistrationModelSerializer(serializers.ModelSerializer):
 
         if not password == confirm_password:
             raise serializers.ValidationError(
-                _('Password doesnt match.'),
+                'Password doesnt match.',
                 code=HTTP_400_BAD_REQUEST
             )
 
@@ -54,17 +53,17 @@ class RegistrationModelSerializer(serializers.ModelSerializer):
 
 class CustomAuthTokenSerializer(serializers.Serializer):
     email = serializers.EmailField(
-        label=_("Email"),
+        label="Email",
         write_only=True
     )
     password = serializers.CharField(
-        label=_("Password"),
+        label="Password",
         style={'input_type': 'password'},
         trim_whitespace=False,
         write_only=True
     )
     token = serializers.CharField(
-        label=_("Token"),
+        label="Token",
         read_only=True
     )
 
@@ -80,7 +79,7 @@ class CustomAuthTokenSerializer(serializers.Serializer):
             # users. (Assuming the default ModelBackend authentication
             # backend.)
             if not user:
-                msg = _('Unable to log in with provided credentials.')
+                msg = 'Unable to log in with provided credentials.'
                 raise serializers.ValidationError(msg, code='authorization')
 
             if not user.is_verified:
@@ -89,7 +88,7 @@ class CustomAuthTokenSerializer(serializers.Serializer):
                     code=HTTP_400_BAD_REQUEST
                 )
         else:
-            msg = _('Must include "username" and "password".')
+            msg = 'Must include "username" and "password".'
             raise serializers.ValidationError(msg, code='authorization')
 
         attrs['user'] = user
