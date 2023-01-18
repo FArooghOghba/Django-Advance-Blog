@@ -8,8 +8,11 @@ from .models import User, Profile
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
-    list_display = ('email', 'is_active', 'is_staff', 'is_superuser')
-    list_filter = ('is_active', 'is_staff', 'is_superuser')
+    list_display = (
+        'email', 'is_active', 'is_staff',
+        'is_superuser', 'is_verified'
+    )
+    list_filter = ('is_active', 'is_staff', 'is_superuser', 'is_verified')
     search_fields = ('email',)
     ordering = ('email',)
 
@@ -18,7 +21,7 @@ class UserAdmin(BaseUserAdmin):
             'fields': ('email', 'password')
         }),
         ('Permissions', {
-            'fields': ('is_staff', 'is_active', 'is_superuser')
+            'fields': ('is_staff', 'is_active', 'is_superuser', 'is_verified')
         }),
         ('Group Permissions', {
             'fields': ('groups', 'user_permissions')
@@ -34,7 +37,7 @@ class UserAdmin(BaseUserAdmin):
             'fields': ('email', 'password1', 'password2'),
         }),
         ('Permissions', {
-            'fields': ('is_staff', 'is_active', 'is_superuser')
+            'fields': ('is_staff', 'is_active', 'is_superuser', 'is_verified')
         }),
     )
 

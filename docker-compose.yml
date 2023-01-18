@@ -1,4 +1,3 @@
-version: "4.13"
 
 services:
   backend:
@@ -10,5 +9,30 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - SECRET_KEY=django-insecure-j3paouk-idbpdb&^qt8ucc1_+!#6_4uc95c2%d$2gs70yc8ifz
+      - SECRET_KEY=django-insecure-j3paouk-idbpdb&^qt8ucc1_+!#6_4uc95c2%d@2gs70yc8ifz
       - DEBUG=True
+
+  smtp4dev:
+    image: rnwood/smtp4dev:v3
+    restart: always
+    ports:
+      # Change the number before : to the port the web interface should be accessible on
+      - '5000:80'
+      # Change the number before : to the port the SMTP server should be accessible on
+      - '25:25'
+      # Change the number before : to the port the IMAP server should be accessible on
+      - '143:143'
+    volumes:
+      # This is where smtp4dev stores the database..
+      - smtp4dev-data:/smtp4dev
+    environment:
+      # Uncomment to customise these settings
+
+      #Specifies the virtual path from web server root where SMTP4DEV web interface will be hosted. e.g. "/" or "/smtp4dev"
+      #- ServerOptions__BasePath=/smtp4dev
+
+      #Specifies the server hostname. Used in auto-generated TLS certificate if enabled.
+      - ServerOptions__HostName=smtp4dev
+
+volumes:
+  smtp4dev-data:

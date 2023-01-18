@@ -1,6 +1,22 @@
-asgiref==3.5.2
+# General Modules
 Django==3.2.16
-python-decouple==3.6
+pillow
+djangorestframework
+
+# Third Party Modules
+djoser
+djangorestframework-simplejwt
+drf-yasg[validation]
+django-filter
+markdown
+asgiref==3.5.2
 pytz==2022.6
 sqlparse==0.4.3
-pillow
+python-decouple==3.6
+django-mail-templated
+
+# Development Modules
+django-debug-toolbar
+flake8
+pytest
+pytest-django
