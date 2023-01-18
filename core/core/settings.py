@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'django.contrib.sites',
+
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_simplejwt',
@@ -186,3 +188,8 @@ EMAIL_HOST = 'smtp4dev'
 EMAIL_PORT = 25
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
+
+
+# Site Framework Config
+
+SITE_ID = 1
