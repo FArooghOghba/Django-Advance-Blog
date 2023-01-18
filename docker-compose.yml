@@ -9,7 +9,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - SECRET_KEY=django-insecure-j3paouk-idbpdb&^qt8ucc1_+!#6_4uc95c2%d$2gs70yc8ifz
+      - SECRET_KEY=django-insecure-j3paouk-idbpdb&^qt8ucc1_+!#6_4uc95c2%d@2gs70yc8ifz
       - DEBUG=True
 
   smtp4dev:
