@@ -8,6 +8,7 @@ from datetime import datetime
 
 User = get_user_model()
 
+
 @pytest.fixture()
 def test_user():
     user = User.objects.create(

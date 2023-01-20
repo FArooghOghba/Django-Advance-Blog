@@ -1,9 +1,10 @@
-from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from django.views.generic.base import TemplateView, RedirectView
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import (
+    ListView, DetailView, CreateView, UpdateView, DeleteView
+)
 
 from .forms import PostForm
 from .models import Post
@@ -27,15 +28,16 @@ class IndexTemplateView(TemplateView):
 
 class MaktabRedirectView(RedirectView):
     """
-    Class Based View (RedirectView) for Provide a redirect on any GET request with
-    URL address or Pattern name.
+    Class Based View (RedirectView) for Provide a
+    redirect on any GET request with URL address or Pattern name.
     """
     url = 'https://maktabkhooneh.org/'
 
 
 class PostListView(ListView):
     """
-    Render some Blog Post list of objects, set by `self.model` or `self.queryset`.
+    Render some Blog Post list of objects, set by
+    `self.model` or `self.queryset`.
     `self.queryset` can actually be any iterable of items, not just a queryset.
     """
 
@@ -54,8 +56,9 @@ class PostDetailView(LoginRequiredMixin, DetailView):
     """
     Render a "detail" view of a Post object.
 
-    By default, this is a model instance looked up from `self.queryset`, but the
-    view will support display of *any* object by overriding `self.get_object()`.
+    By default, this is a model instance
+    looked up from `self.queryset`, but the view will
+    support display of *any* object by overriding `self.get_object()`.
     """
 
     model = Post
