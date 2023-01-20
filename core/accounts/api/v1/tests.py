@@ -1,3 +1,5 @@
+from time import sleep
+
 import pytest
 
 from django.contrib.auth import get_user_model
@@ -41,6 +43,8 @@ class TestAccountsAPIRegistrations:
         }
         response = api_client.post(path=url, data=data)
         response_code = response.status_code
+
+        sleep(1)
         assert response_code == status_code
 
         if response_code == HTTP_201_CREATED:
