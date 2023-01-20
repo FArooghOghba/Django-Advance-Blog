@@ -14,27 +14,24 @@ User = get_user_model()
 
 class RegistrationModelSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
-        max_length=255, write_only=True,
-        style={'input_type': 'password'}
+        max_length=255, write_only=True, style={"input_type": "password"}
     )
 
     confirm_password = serializers.CharField(
-        max_length=255, write_only=True,
-        style={'input_type': 'password'}
+        max_length=255, write_only=True, style={"input_type": "password"}
     )
 
     class Meta:
         model = User
-        fields = ('email', 'password', 'confirm_password')
+        fields = ("email", "password", "confirm_password")
 
     def validate(self, attrs):
-        password = attrs.get('password')
-        confirm_password = attrs.get('confirm_password')
+        password = attrs.get("password")
+        confirm_password = attrs.get("confirm_password")
 
         if not password == confirm_password:
             raise serializers.ValidationError(
-                'Password doesnt match.',
-                code=HTTP_400_BAD_REQUEST
+                "Password doesnt match.", code=HTTP_400_BAD_REQUEST
             )
 
         try:
@@ -47,40 +44,36 @@ class RegistrationModelSerializer(serializers.ModelSerializer):
         return super().validate(attrs)
 
     def create(self, validated_data):
-        validated_data.pop('confirm_password', None)
+        validated_data.pop("confirm_password", None)
         return User.objects.create_user(**validated_data)
 
 
 class CustomAuthTokenSerializer(serializers.Serializer):
-    email = serializers.EmailField(
-        label="Email",
-        write_only=True
-    )
+    email = serializers.EmailField(label="Email", write_only=True)
     password = serializers.CharField(
         label="Password",
-        style={'input_type': 'password'},
+        style={"input_type": "password"},
         trim_whitespace=False,
-        write_only=True
+        write_only=True,
     )
-    token = serializers.CharField(
-        label="Token",
-        read_only=True
-    )
+    token = serializers.CharField(label="Token", read_only=True)
 
     def validate(self, attrs):
-        email = attrs.get('email')
-        password = attrs.get('password')
+        email = attrs.get("email")
+        password = attrs.get("password")
 
         if email and password:
-            user = authenticate(request=self.context.get('request'),
-                                email=email, password=password)
+            user = authenticate(
+                request=self.context.get("request"),
+                email=email, password=password
+            )
 
             # The "authenticate" call simply returns None for is_active=False
             # users. (Assuming the default ModelBackend authentication
             # backend.)
             if not user:
-                msg = 'Unable to log in with provided credentials.'
-                raise serializers.ValidationError(msg, code='authorization')
+                msg = "Unable to log in with provided credentials."
+                raise serializers.ValidationError(msg, code="authorization")
 
             if not user.is_verified:
                 raise serializers.ValidationError(
@@ -89,9 +82,9 @@ class CustomAuthTokenSerializer(serializers.Serializer):
                 )
         else:
             msg = 'Must include "username" and "password".'
-            raise serializers.ValidationError(msg, code='authorization')
+            raise serializers.ValidationError(msg, code="authorization")
 
-        attrs['user'] = user
+        attrs["user"] = user
         return attrs
 
 
@@ -105,8 +98,8 @@ class CustomTokenObtainSerializer(TokenObtainPairSerializer):
                 code=HTTP_400_BAD_REQUEST
             )
 
-        validated_data['user_email'] = self.user.email
-        validated_data['user_id'] = self.user.id
+        validated_data["user_email"] = self.user.email
+        validated_data["user_id"] = self.user.id
 
         return validated_data
 
@@ -117,8 +110,11 @@ class ChangePasswordModelSerializer(serializers.Serializer):
         style={'input_type': 'password'}
     )
     new_password = serializers.CharField(
-        max_length=255, write_only=True, required=True,
-        validators=[validate_password], style={'input_type': 'password'}
+        max_length=255,
+        write_only=True,
+        required=True,
+        validators=[validate_password],
+        style={"input_type": "password"},
     )
     confirm_new_password = serializers.CharField(
         max_length=255, write_only=True, required=True,
@@ -126,8 +122,8 @@ class ChangePasswordModelSerializer(serializers.Serializer):
     )
 
     def validate(self, attrs):
-        new_password = attrs.get('new_password')
-        confirm_new_password = attrs.get('confirm_new_password')
+        new_password = attrs.get("new_password")
+        confirm_new_password = attrs.get("confirm_new_password")
 
         if not new_password == confirm_new_password:
             raise serializers.ValidationError(
@@ -136,7 +132,7 @@ class ChangePasswordModelSerializer(serializers.Serializer):
             )
 
         try:
-            validate_password(attrs.get('new_password'))
+            validate_password(attrs.get("new_password"))
         except ValidationError as e:
             raise serializers.ValidationError(
                 {'new_password': list(e.messages)}
@@ -146,7 +142,7 @@ class ChangePasswordModelSerializer(serializers.Serializer):
 
 
 class ProfileModelSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField(source='user.email', read_only=True)
+    email = serializers.EmailField(source="user.email", read_only=True)
 
     class Meta:
         model = Profile
@@ -159,7 +155,7 @@ class ActivationResendSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True)
 
     def validate(self, attrs):
-        email = attrs.get('email')
+        email = attrs.get("email")
 
         try:
             user = User.objects.get(email=email)
@@ -170,11 +166,11 @@ class ActivationResendSerializer(serializers.Serializer):
 
         if user.is_verified:
             raise serializers.ValidationError(
-                {'detail': 'Your account has already verified.'},
-                code=HTTP_400_BAD_REQUEST
+                {"detail": "Your account has already verified."},
+                code=HTTP_400_BAD_REQUEST,
             )
 
-        attrs['user'] = user
+        attrs["user"] = user
         return super().validate(attrs)
 
 

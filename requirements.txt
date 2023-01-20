@@ -18,5 +18,6 @@ django-mail-templated
 # Development Modules
 django-debug-toolbar
 flake8
+black
 pytest
 pytest-django
