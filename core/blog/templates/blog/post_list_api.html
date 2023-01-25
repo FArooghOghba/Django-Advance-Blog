@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Post List</title>
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+</head>
+<body>
+    <h1>Post List View</h1>
+    <br>
+    <hr>
+
+    <ol id="post-wrapper">
+
+    </ol>
+
+    <script>
+        $.get( "{% url 'blog:api-v1:post-list' %}", function(data) {
+              wrapper = $('#post-wrapper');
+              for (post of data.results){
+                    wrapper.append(`
+                        <li>
+                            <a href="${post.absolute_url}">
+                                <h2>${post.title}</h2>
+                            </a>
+                        </li>
+                    `)
+
+              }
+
+        });
+    </script>
+
+</body>
+</html>

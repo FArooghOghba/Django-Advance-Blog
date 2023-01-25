@@ -45,11 +45,19 @@ class PostListView(ListView):
     # queryset = Post.objects.filter(status=True)
     context_object_name = 'posts'
     ordering = '-published_date'
-    paginate_by = 3
+    paginate_by = 5
 
     # def get_queryset(self):
     #     posts = Post.objects.filter(author=4)
     #     return posts
+
+
+class PostListAPIView(TemplateView):
+    """
+    Render some Blog Post api list of objects.
+    """
+
+    template_name = "blog/post_list_api.html"
 
 
 class PostDetailView(LoginRequiredMixin, DetailView):

@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'django_filters',
     'mail_templated',
     'drf_yasg',
+    'corsheaders',
     'debug_toolbar',
 
     'accounts.apps.AccountsConfig',
@@ -59,6 +60,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 
     'django.middleware.security.SecurityMiddleware',
@@ -193,3 +195,15 @@ EMAIL_HOST_PASSWORD = ''
 # Site Framework Config
 
 SITE_ID = 1
+
+
+# Cros Headers Config
+
+CORS_ALLOWED_ORIGINS = [
+    "https://example.com",
+    "https://sub.example.com",
+    "http://localhost:8080",
+    "http://127.0.0.1:9000",
+]
+
+# CORS_ALLOW_ALL_ORIGINS: True
