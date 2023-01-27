@@ -1,7 +1,14 @@
 from django.urls import path, include
-from .views import (IndexTemplateView, MaktabRedirectView,
-                    PostListView, PostDetailView, PostCreateView,
-                    PostUpdateView, PostDeleteView)
+from .views import (
+    IndexTemplateView,
+    MaktabRedirectView,
+    PostListView,
+    PostListAPIView,
+    PostDetailView,
+    PostCreateView,
+    PostUpdateView,
+    PostDeleteView
+)
 
 
 app_name = 'blog'
@@ -15,6 +22,11 @@ urlpatterns = [
         'post/',
         PostListView.as_view(),
         name='post-list'
+    ),
+    path(
+        'post/api/',
+        PostListAPIView.as_view(),
+        name='post-list-api'
     ),
     path(
         'post/detail/<int:post_id>/',
