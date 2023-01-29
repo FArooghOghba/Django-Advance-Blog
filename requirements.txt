@@ -3,6 +3,10 @@ Django==3.2.16
 pillow
 djangorestframework
 
+# Background proccess & cache
+celery
+redis
+
 # Third Party Modules
 djoser
 djangorestframework-simplejwt

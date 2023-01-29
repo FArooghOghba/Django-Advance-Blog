@@ -199,6 +199,7 @@ SITE_ID = 1
 
 # Cros Headers Config
 
+# # CORS_ALLOW_ALL_ORIGINS: True
 CORS_ALLOWED_ORIGINS = [
     "https://example.com",
     "https://sub.example.com",
@@ -206,4 +207,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:9000",
 ]
 
-# CORS_ALLOW_ALL_ORIGINS: True
+
+# Celery Config
+
+CELERY_BROKER_URL = 'redis://redis:6379/1'
