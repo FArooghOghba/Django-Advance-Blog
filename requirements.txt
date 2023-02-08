@@ -6,6 +6,7 @@ djangorestframework
 # Background proccess & cache
 celery
 redis
+django-redis
 
 # Third Party Modules
 djoser
