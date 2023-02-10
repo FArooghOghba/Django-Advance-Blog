@@ -28,3 +28,6 @@ black
 pytest
 pytest-django
 Faker
+
+# Production Modules
+gunicorn
